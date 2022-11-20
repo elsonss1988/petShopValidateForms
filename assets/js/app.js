@@ -17,8 +17,9 @@ inputs.forEach((input)=>{
             thousandsSeparator: '.',
             cursor: 'end'
     })
+}
 
     input.addEventListener('blur',(evento)=>{
         valida(evento.target)
     })
-}})
+})

@@ -23,40 +23,41 @@ const tiposDeErro = [
 
 const mensagensDeErro = {
     nome: {
-        valueMissing: 'O campo de nome não pode estar vazio'
+        valueMissing: 'O campo de nome não pode estar vazio.'
     },
     email: {
-        valueMissing: 'O campo de email não pode estar vazio',
-        typeMismatch: 'O email digitado não é válido'
+        valueMissing: 'O campo de email não pode estar vazio.',
+        typeMismatch: 'O email digitado não é válido.'
     },
     senha: {
         valueMissing: 'O campo de senha não pode estar vazio',
         patternMismatch: 'A senha deve conter entre 6 e 12 caracteres e conter pelo menos uma letra maiúscula, uma letra minúscula e um número'
     },
     dataNascimento: {
-        valueMissing: 'O campo de data de nascimento não pode estar vazio',
-        customError: 'Você deve ser maior que 18 anos para se cadastrar'
+        valueMissing: 'O campo de data de nascimento não pode estar vazio.',
+        customError: 'Você deve ser maior que 18 anos para se cadastrar.'
     },
     cpf: {
-        valueMissing: 'O campo de CPF não pode estar vazio',
-        customError: 'O CPF digitado não é válido'
+        valueMissing: 'O campo de CPF não pode estar vazio.',
+        customError: 'O CPF digitado não é válido.'
     },
     cep: {
-        valueMissing: 'O campo de CEP não pode estar vazio',
-        patternMismatch: 'O CEP digitado não é válido',
+        valueMissing: 'O campo de CEP não pode estar vazio.',
+        patternMismatch: 'O CEP digitado não é válido.',
+        customError: 'Não foi possível buscar o CEP.'
     },
     logradouro: {
-        valueMissing: 'O campo de logradouro não pode estar vazio',
+        valueMissing: 'O campo de logradouro não pode estar vazio.',
         customError: 'Não foi possível encontrar o endereço para o CEP digitado'
     },
     cidade: {
-        valueMissing: 'O campo de cidade não pode estar vazio',
+        valueMissing: 'O campo de cidade não pode estar vazio.'
     },
     estado: {
-        valueMissing: 'O campo de estado não pode estar vazio',
+        valueMissing: 'O campo de estado não pode estar vazio.'
     },
     preco:{
-        valueMissing: 'O campo de preço não pode estar vazio',
+        valueMissing: 'O campo de preço não pode estar vazio.'
     }   
 }
 
@@ -147,29 +148,53 @@ function checaEstruturaCPF(cpf) {
     return checaDigitoVerificador(cpf, multiplicador)
 }
 
-function checaDigitoVerificador(cpf, multiplicador) {
-    if(multiplicador >= 12) {
-        return true
-    }
+// function checaDigitoVerificador(cpf, multiplicador) {
+//     if(multiplicador >= 12) {
+//         return true
+//     }
 
-    let multiplicadorInicial = multiplicador
-    let soma = 0
-    const cpfSemDigitos = cpf.substr(0, multiplicador - 1).split('')
-    const digitoVerificador = cpf.charAt(multiplicador - 1)
-    for(let contador = 0; multiplicadorInicial > 1 ; multiplicadorInicial--) {
-        soma = soma + cpfSemDigitos[contador] * multiplicadorInicial
-        contador++
-    }
+//     let multiplicadorInicial = multiplicador
+//     let soma = 0
+//     const cpfSemDigitos = cpf.substr(0, multiplicador - 1).split('')
+//     const digitoVerificador = cpf.charAt(multiplicador - 1)
+//     for(let contador = 0; multiplicadorInicial > 1 ; multiplicadorInicial--) {
+//         console.log('multi',soma);
+//         soma = soma + cpfSemDigitos[contador] * multiplicadorInicial
+//         contador++
+//     }
 
-    if(digitoVerificador == confirmaDigito(soma)) {
-        return checaDigitoVerificador(cpf, multiplicador + 1)
-    }
+//     if(digitoVerificador == confirmaDigito(soma)) {
+//         console.log('digito',soma);
+//         return checaDigitoVerificador(cpf, multiplicador + 1)
+//     }
 
-    return false
-}
+//     return false
+// }
 
-function confirmaDigito(soma) {
-    return 11 - (soma % 11)
+// function confirmaDigito(soma) {
+//     return 11 - (soma % 11)
+// }
+
+
+function checaDigitoVerificador(strCPF) {
+        let Soma;
+        let Resto;
+        Soma = 0;
+      if (strCPF == "00000000000") return false;
+    
+      for (let i=1; i<=9; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (11 - i);
+      Resto = (Soma * 10) % 11;
+    
+        if ((Resto == 10) || (Resto == 11))  Resto = 0;
+        if (Resto != parseInt(strCPF.substring(9, 10)) ) return false;
+    
+      Soma = 0;
+        for (let i = 1; i <= 10; i++) Soma = Soma + parseInt(strCPF.substring(i-1, i)) * (12 - i);
+        Resto = (Soma * 10) % 11;
+    
+        if ((Resto == 10) || (Resto == 11))  Resto = 0;
+        if (Resto != parseInt(strCPF.substring(10, 11) ) ) return false;
+        return true;
 }
 
 function recuperarCEP(input) {
